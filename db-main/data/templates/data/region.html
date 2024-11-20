@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crime Insight</title>
+    <style>
+    .wrap {position: absolute;left: 0;bottom: 40px;width: 288px;height: 132px;margin-left: -144px;text-align: left;overflow: hidden;font-size: 12px;font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;line-height: 1.2;}
+    .wrap * {padding: 0;margin: 0;}
+    .wrap .info {width: 286px;height: 120px;border-radius: 5px;border-bottom: 2px solid #ccc;border-right: 1px solid #ccc;overflow: hidden;background: #fff;}
+    .wrap .info:nth-child(1) {border: 0;box-shadow: 0px 1px 2px #888;}
+    .info .title {padding: 5px 0 0 10px;height: 30px;background: #eee;border-bottom: 1px solid #ddd;font-size: 15px;font-weight: bold;}
+    .info .close {position: absolute;top: 10px;right: 10px;color: #888;width: 17px;height: 17px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');}
+    .info .close:hover {cursor: pointer;}
+    .info .body {position: relative;overflow: hidden;}
+    .info .desc {position: relative;margin: 13px 0 0 90px;height: 75px;}
+    .desc .ellipsis {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+    .desc .jibun {font-size: 9px;color: #888;margin-top: -2px;}
+    .info .img {position: absolute;top: 6px;left: 5px;width: 73px;height: 71px;border: 1px solid #ddd;color: #888;overflow: hidden;}
+    .info:after {content: '';position: absolute;margin-left: -12px;left: 50%;bottom: 0;width: 22px;height: 12px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')}
+   
+		
+	
+	
+</style>
+	<meta name="description" content="A minimalist layout for Login pages. Built with Pico CSS." />
+	<link rel="shortcut icon" href="https://picocss.com/favicon.ico" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
+	<link rel="stylesheet" href="css1/pico.min.css">
+	<article data-theme="dark">
+	<header>
+		<link href="css/styles.css" rel="stylesheet" />
+		{% include 'home/navbar.html' %}
+	</header>
+</head>
+<body>
+<p style="margin-top:-12px">
+</p>
+<div id="map" style="width:100%;height:800px;"></div>
+
+<script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=2a6fa26b5611310b642937947b2f84aa"></script>
+<script>
+var mapContainer = document.getElementById('map'), // 지도의 중심좌표
+    mapOption = { 
+        center: new kakao.maps.LatLng(37.5135217,126.9739251), // 지도의 중심좌표
+        level: 9 // 지도의 확대 레벨
+    }; 
+
+var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+
+
+
+// 지도에 마커와 인포윈도우를 표시하는 함수입니다
+function displayMarker(locPosition, message) {
+
+	
+
+	
+	var imageSrc = 'Multi/product/templates/product/marker/pngwing.com.png', // 마커이미지의 주소입니다    
+    imageSize = new kakao.maps.Size(32, 33), // 마커이미지의 크기입니다
+    imageOption = {offset: new kakao.maps.Point(27, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+      
+	// 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+	var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+		markerPosition = new kakao.maps.LatLng(locPosition); // 마커가 표시될 위치입니다
+
+
+
+
+    // 마커를 생성합니다
+    var marker = new kakao.maps.Marker({  
+        map: map, 
+        position: locPosition,
+		image: markerImage // 마커이미지 설정 
+    }); 
+    
+    var iwContent = message, // 인포윈도우에 표시할 내용
+        iwRemoveable = true;
+
+    // 인포윈도우를 생성합니다
+    var infowindow = new kakao.maps.InfoWindow({
+        content : iwContent,
+        removable : iwRemoveable
+    });
+    
+    // 인포윈도우를 마커위에 표시합니다 
+    infowindow.open(map, marker);
+    
+    // 지도 중심좌표를 접속위치로 변경합니다
+    map.setCenter(locPosition);      
+}
+
+
+// 센터명, 위치 정보
+var positions = [
+{
+	title: '<div style="padding:5px;"> 용산구 장소별 범죄 통계</div>',
+	lating: new kakao.maps.LatLng( 37.5313805, 126.9798839 )
+},
+{
+    title: '<div style="padding:5px;"> 중구 장소별 범죄 통계</div>',
+    lating: new kakao.maps.LatLng( 37.5601443,126.9959649 )
+},
+{
+    title: '<div style="padding:5px;"> 서초구 장소별 범죄 통계</div>',
+    lating: new kakao.maps.LatLng( 37.4732933,127.0312101 )
+},
+{
+    title: '<div style="padding:5px;"> 동작구 장소별 범죄 통계</div>',
+    lating: new kakao.maps.LatLng( 37.4988794, 126.9516345 )
+},
+{
+    title: '<div style="padding:5px;"> 강서구 장소별 범죄 통계</div>',
+    lating: new kakao.maps.LatLng( 37.5612346, 126.8228132 )
+},
+{
+	title: '<div style="padding:5px;"> 양천구 장소별 범죄 통계</div>',
+	lating: new kakao.maps.LatLng( 37.5247402, 126.8553909 )
+},
+{
+    title: '<div style="padding:5px;"> 구로구 장소별 범죄 통계</div>',
+    lating: new kakao.maps.LatLng( 37.4944134, 126.8563336 )
+},
+{
+    title: '<div style="padding:5px;"> 금천구 장소별 범죄 통계</div>',
+    lating: new kakao.maps.LatLng( 37.4605655, 126.9008183 )
+},
+{
+    title: '<div style="padding:5px;"> 영등포구 장소별 범죄 통계</div>',
+    lating: new kakao.maps.LatLng( 37.5223245, 126.9101692 )
+},
+{
+    title: '<div style="padding:5px;"> 관악구 장소별 범죄 통계</div>',
+    lating: new kakao.maps.LatLng( 37.4673709, 126.9453359 )
+},
+
+{
+	title: '<div style="padding:5px;"> 송파구 장소별 범죄 통계</div>',
+	lating: new kakao.maps.LatLng( 37.5056205, 127.1152992 )
+},
+{
+    title: '<div style="padding:5px;"> 강동구 장소별 범죄 통계</div>',
+    lating: new kakao.maps.LatLng( 37.5504483, 127.1470117 )
+},
+{
+    title: '<div style="padding:5px;"> 광진구 장소별 범죄 통계</div>',
+    lating: new kakao.maps.LatLng( 37.5467284, 127.0857543 )
+},
+{
+    title: '<div style="padding:5px;"> 중랑구 장소별 범죄 통계</div>',
+    lating: new kakao.maps.LatLng( 37.5978139,127.0928927 )
+},
+{
+    title: '<div style="padding:5px;"> 노원구 장소별 범죄 통계</div>',
+    lating: new kakao.maps.LatLng( 37.6525076, 127.075042 )
+},
+{
+	title: '<div style="padding:5px;"> 도봉구 장소별 범죄 통계</div>',
+	lating: new kakao.maps.LatLng( 37.6691065, 127.0323527 )
+},
+{
+    title: '<div style="padding:5px;"> 강북구 장소별 범죄 통계</div>',
+    lating: new kakao.maps.LatLng( 37.6434801, 127.0111839 )
+}, 
+{
+    title: '<div style="padding:5px;"> 성북구 장소별 범죄 통계</div>',
+    lating: new kakao.maps.LatLng( 37.6056991, 127.0175664, )
+},
+{
+    title: '<div style="padding:5px;"> 동대문구 장소별 범죄 통계</div>',
+    lating: new kakao.maps.LatLng( 37.5819561, 127.054846 )
+},
+{
+    title: '<div style="padding:5px;"> 성동구 장소별 범죄 통계</div>',
+    lating: new kakao.maps.LatLng( 37.5510171, 127.0410394 )
+},
+
+{
+	title: '<div style="padding:5px;"> 종로구 장소별 범죄 통계</div>',
+	lating: new kakao.maps.LatLng( 37.5949159, 126.977339 )
+},
+{
+    title: '<div style="padding:5px;"> 은평구 장소별 범죄 통계</div>',
+    lating: new kakao.maps.LatLng( 37.6191784, 126.9270142 )
+},
+{
+    title: '<div style="padding:5px;"> 서대문구 장소별 범죄 통계</div>',
+    lating: new kakao.maps.LatLng( 37.5777796, 126.9390623 )
+},
+{
+    title: '<div style="padding:5px;"> 마포구 장소별 범죄 통계</div>',
+    lating: new kakao.maps.LatLng( 37.5593115, 126.9082589 )
+},
+{
+    title: '<div style="padding:5px;"> 강남구 장소별 범죄 통계</div>',
+    lating: new kakao.maps.LatLng( 37.4966645, 127.0629804 )
+}
+
+
+
+];
+
+
+// 많은 정보,,,;
+    var contents = [
+        {
+            name: ' 용산구 ',
+            address: ' <div class="ellipsis">용산구 장소별 범죄 통계 데이터입니다.</div>',
+            url: ' <div><a href= " http://127.0.0.1:8000/data/yongsan/ " target="_blank" class="link">용산구 데이터 보기</a></div> ',
+        },
+        {
+            name: ' 중구 ',
+            address: '<div class="ellipsis"> 중구 장소별 범죄 통계 데이터입니다.</div>',
+            url: ' <div><a href= " http://127.0.0.1:8000/data/junggu " target="_blank" class="link">중구 데이터 보기</a></div> ',
+        },
+        {
+            name: ' 서초구 ',
+            address: '<div class="ellipsis"> 서초구 장소별 범죄 통계 데이터입니다.</div>',
+            url: ' <div><a href= " http://127.0.0.1:8000/data/ " target="_blank" class="link">서초구 데이터 보기</a></div> ',
+        },
+        {
+            name: ' 동작구 ',
+            address: '<div class="ellipsis"> 동작구 장소별 범죄 통계 데이터입니다.</div>',
+            url: ' <div><a href= " http://127.0.0.1:8000/data/dongjak " target="_blank" class="link">동작구 데이터 보기</a></div> ',
+        },
+        {
+            name: ' 강서구 ',
+            address: '<div class="ellipsis"> 강서구 장소별 범죄 통계 데이터입니다.</div>',
+            url: ' <div><a href= " http://127.0.0.1:8000/data/ " target="_blank" class="link">강서구 데이터 보기</a></div> ',
+        },
+        {
+            name: ' 양천구 ',
+            address: '<div class="ellipsis"> 양천구 장소별 범죄 통계 데이터입니다.</div>',
+            url: ' <div><a href= " http://127.0.0.1:8000/data/ " target="_blank" class="link">양천구 데이터 보기</a></div> ',
+        },
+        {
+            name: ' 구로구 ',
+            address: '<div class="ellipsis"> 구로구 장소별 범죄 통계 데이터입니다.</div>',
+            url: ' <div><a href= " http://127.0.0.1:8000/data/ " target="_blank" class="link">구로구 데이터 보기</a></div> ',
+        },
+        {
+            name: ' 금천구 ',
+            address: '<div class="ellipsis"> 금천구 장소별 범죄 통계 데이터입니다.</div>',
+            url: ' <div><a href= " http://127.0.0.1:8000/data/ " target="_blank" class="link">금천구 데이터 보기</a></div> ',
+        },
+        {
+            name: ' 영등포구 ',
+            address: '<div class="ellipsis"> 영등포구 장소별 범죄 통계 데이터입니다.</div>',
+            url: ' <div><a href= " http://127.0.0.1:8000/data/ " target="_blank" class="link">영등포구 데이터 보기</a></div> ',
+        },
+        {
+            name: ' 관악구 ',
+            address: '<div class="ellipsis"> 관악구 장소별 범죄 통계 데이터입니다.</div>',
+            url: ' <div><a href= " http://127.0.0.1:8000/data/ " target="_blank" class="link">관악구 데이터 보기</a></div> ',
+        },
+        {
+            name: ' 송파구 ',
+            address: '<div class="ellipsis"> 송파구 장소별 범죄 통계 데이터입니다.</div>',
+            url: ' <div><a href= " http://127.0.0.1:8000/data/ " target="_blank" class="link">송파구 데이터 보기</a></div> ',
+        },
+        {
+            name: ' 강동구 ',
+            address: '<div class="ellipsis"> 강동구 장소별 범죄 통계 데이터입니다.</div>',
+            url: ' <div><a href= " http://127.0.0.1:8000/data/ " target="_blank" class="link">강동구 데이터 보기</a></div> ',
+        },
+        {
+            name: ' 광진구 ',
+            address: '<div class="ellipsis"> 광진구 장소별 범죄 통계 데이터입니다.</div>',
+            url: ' <div><a href= " http://127.0.0.1:8000/data/ " target="_blank" class="link">광진구 데이터 보기</a></div> ',
+        },        
+        {
+            name: ' 중랑구 ',
+            address: '<div class="ellipsis"> 중랑구 장소별 범죄 통계 데이터입니다.</div>',
+            url: ' <div><a href= " http://127.0.0.1:8000/data/ " target="_blank" class="link">중랑구 데이터 보기</a></div> ',
+        },
+        {
+            name: ' 노원구 ',
+            address: '<div class="ellipsis"> 노원구 장소별 범죄 통계 데이터입니다.</div>',
+            url: ' <div><a href= " http://127.0.0.1:8000/data/ " target="_blank" class="link">노원구 데이터 보기</a></div> ',
+        },
+        {
+            name: ' 도봉구 ',
+            address: '<div class="ellipsis"> 도봉구 장소별 범죄 통계 데이터입니다.</div>',
+            url: ' <div><a href= " http://127.0.0.1:8000/data/ " target="_blank" class="link">도봉구 데이터 보기</a></div> ',
+        },
+        {
+            name: ' 강북구 ',
+            address: '<div class="ellipsis"> 강북구 장소별 범죄 통계 데이터입니다.</div>',
+            url: ' <div><a href= " http://127.0.0.1:8000/data/ " target="_blank" class="link">강북구 데이터 보기</a></div> ',
+        },
+        {
+            name: ' 성북구 ',
+            address: '<div class="ellipsis"> 성북구 장소별 범죄 통계 데이터입니다.</div>',
+            url: ' <div><a href= " http://127.0.0.1:8000/data/ " target="_blank" class="link">성북구 데이터 보기</a></div> ',
+        },
+        {
+            name: ' 동대문구 ',
+            address: '<div class="ellipsis"> 동대문구 장소별 범죄 통계 데이터입니다.</div>',
+            url: ' <div><a href= " http://127.0.0.1:8000/data/ " target="_blank" class="link">동대문구 데이터 보기</a></div> ',
+        },
+        {
+            name: ' 성동구 ',
+            address: '<div class="ellipsis"> 성동구 장소별 범죄 통계 데이터입니다.</div>',
+            url: ' <div><a href= " http://127.0.0.1:8000/data/ " target="_blank" class="link">성동구 데이터 보기</a></div> ',
+        },
+        {
+            name: ' 종로구 ',
+            address: '<div class="ellipsis"> 종로구 장소별 범죄 통계 데이터입니다.</div>',
+            url: ' <div><a href= " http://127.0.0.1:8000/data/ " target="_blank" class="link">종로구 데이터 보기</a></div> ',
+        },
+        {
+            name: ' 은평구 ',
+            address: '<div class="ellipsis"> 은평구 장소별 범죄 통계 데이터입니다.</div>',
+            url: ' <div><a href= " http://127.0.0.1:8000/data/ " target="_blank" class="link">은평구 데이터 보기</a></div> ',
+        },
+        {
+            name: ' 서대문구 ',
+            address: '<div class="ellipsis"> 서대문구 장소별 범죄 통계 데이터입니다.</div>',
+            url: ' <div><a href= " http://127.0.0.1:8000/data/ " target="_blank" class="link">서대문구 데이터 보기</a></div> ',
+        },
+        {
+            name: ' 마포구 ',
+            address: '<div class="ellipsis"> 마포구 장소별 범죄 통계 데이터입니다.</div>',
+            url: ' <div><a href= " http://127.0.0.1:8000/data/ " target="_blank" class="link" 마포구 데이터 보기</a></div> ',
+        },
+        {
+            name: ' 강남구 ',
+            address: '<div class="ellipsis"> 강남구 장소별 범죄 통계 데이터입니다.</div>',
+            url: ' <div><a href= " http://127.0.0.1:8000/data/gangnam " target="_blank" class="link">강남구 데이터 보기</a></div> ',
+        },
+]
+
+
+// 지도에 마커를 표시합니다 
+
+for (var i=0; i<positions.length;i++){
+	var markerPosition  = positions[i].lating
+	// 마커를 생성합니다
+	var marker = new kakao.maps.Marker({
+		position: markerPosition
+	});
+	marker.setMap(map);
+	
+    // 커스텀 오버레이에 표시할 컨텐츠 입니다
+
+
+                var content = '<div class="wrap">' + 
+                    '    <div class="info">' + 
+                    '        <div class="title">' + 
+                                contents[i].name+ 
+                    '            <div class="close" onclick="closeOverlay()" title="닫기"></div>' + 
+                    '        </div>' + 
+                    '        <div class="body">' + 
+                    '            <div class="desc">' + 
+                                    contents[i].address+
+                                    contents[i].url+ 
+                    '            </div>' + 
+                    '        </div>' + 
+                    '    </div>' +    
+                    '</div>';
+    // 마커 위에 커스텀오버레이를 표시합니다
+    // 마커를 중심으로 커스텀 오버레이를 표시하기위해 CSS를 이용해 위치를 설정했습니다
+  	var overlay = new kakao.maps.CustomOverlay({
+        content: content,
+        position: marker.getPosition(),
+        yAnchor: 1,
+        map: null,       
+    });
+    // 마커 클릭 이벤트 처리
+    kakao.maps.event.addListener(marker, 'click', makeClickListener(marker, overlay));
+}
+    // 마커를 클릭했을 때 커스텀 오버레이를 표시합니다
+    kakao.maps.event.addListener(marker, 'click', function() {
+        overlay.setMap(map);
+    });
+
+
+
+function makeClickListener(marker, overlay) {
+    return function() {
+        if (overlay.getMap()) {
+        overlay.setMap(null);
+        } 
+        else {
+        overlay.setMap(map);
+        }
+    }
+}
+</script>
+</body>
+</html>
